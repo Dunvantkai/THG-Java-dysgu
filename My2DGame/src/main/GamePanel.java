@@ -11,7 +11,7 @@ public class GamePanel extends JPanel implements Runnable
 {
 	//screen settings 
 	final int originalTileSize = 16;// 16x16 tile
-	final int scale = 3; // for scaling up the screen to it does not look so small
+	final int scale = 3; // for scaling up the screen to it does not look so small 3
 	
 	final int tileSize = originalTileSize * scale; //48x48 tile
 	final int maxScreenCol = 16; //16px hoz
@@ -20,7 +20,7 @@ public class GamePanel extends JPanel implements Runnable
 	final int screenHeight = tileSize * maxScreenRow; //576
 	
 	//fps
-	int FPS =60;
+	int TPS=60;
 	
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread;
@@ -28,7 +28,7 @@ public class GamePanel extends JPanel implements Runnable
 	//set player's def pos
 	int playerX = 100;
 	int playerY = 100;
-	int playerSpeed = 4;
+	int playerSpeed = 4; //player speed is 4
 	
 	
 	public GamePanel()
@@ -47,16 +47,23 @@ public class GamePanel extends JPanel implements Runnable
 	@Override
 	public void run() 
 	{
-		double drawInterval = 1000000000/FPS; //
+		double drawInterval = 1000000000/TPS; //
 		double nextDrawTime = System.nanoTime() + drawInterval;
+		int checkTPS = 0;
 		
 		while(gameThread != null)
 		{
 
 			update();
-			
 			repaint();
-			
+			if(checkTPS==TPS || checkTPS>TPS) 
+			{
+				System.out.printf("PlayerX: %d PlayerY: %d TPS: %d%n", playerX, playerY, checkTPS);
+				checkTPS = 0;
+			}
+			else {
+				checkTPS++;
+			}			
 			
 			try 
 			{
@@ -66,9 +73,8 @@ public class GamePanel extends JPanel implements Runnable
 				{
 					remainingTime = 0;
 				}
-				
-				Thread.sleep((long) remainingTime/1000000);
-				
+				double timeLeft = remainingTime/1000000;
+				Thread.sleep((long) timeLeft);
 				nextDrawTime += drawInterval;
 				
 			} catch (InterruptedException e) {
@@ -79,20 +85,19 @@ public class GamePanel extends JPanel implements Runnable
 	}
 	public void update() 
 	{
-		if(keyH.upPressed == true)
+		if(keyH.upPressed == true && playerY>0)
 		{
-			//playerY -= playerSpeed;
-			playerY = playerY - playerSpeed; //same thing as this 
+			playerY -= playerSpeed;
 		}
-		else if(keyH.downPressed == true)
+		else if(keyH.downPressed == true && playerY<screenHeight-tileSize)
 		{
 			playerY += playerSpeed;
 		}
-		else if(keyH.leftPressed == true)
+		else if(keyH.leftPressed == true && playerX>0)
 		{
 			playerX -= playerSpeed;
 		}
-		else if(keyH.rightPressed == true)
+		else if(keyH.rightPressed == true && playerX<screenWidth-tileSize)
 		{
 			playerX += playerSpeed;
 		}
