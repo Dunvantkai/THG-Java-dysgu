@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import javax.swing.JPanel;
+import entity.Player;
 
 public class GamePanel extends JPanel implements Runnable
 {
@@ -22,8 +22,10 @@ public class GamePanel extends JPanel implements Runnable
 	//fps
 	int TPS=60;
 	
+	
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread;
+	Player player = new Player(this,keyH);
 	
 	//set player's def pos
 	int playerX = 100;
@@ -49,14 +51,14 @@ public class GamePanel extends JPanel implements Runnable
 	{
 		double drawInterval = 1000000000/TPS; //
 		double nextDrawTime = System.nanoTime() + drawInterval;
-		int checkTPS = 0;
+		int checkTPS = 60;
 		
 		while(gameThread != null)
 		{
 
 			update();
 			repaint();
-			if(checkTPS==TPS || checkTPS>TPS) 
+			if(checkTPS>=TPS) 
 			{
 				System.out.printf("PlayerX: %d PlayerY: %d TPS: %d%n", playerX, playerY, checkTPS);
 				checkTPS = 0;
