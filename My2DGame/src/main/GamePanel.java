@@ -13,12 +13,12 @@ public class GamePanel extends JPanel implements Runnable
 	final int originalTileSize = 16;// 16x16 tile
 	final int scale = 3; // for scaling up the screen to it does not look so small 3
 	
-	final int tileSize = originalTileSize * scale; //48x48 tile
+	public final int tileSize = originalTileSize * scale; //48x48 tile
 	final int maxScreenCol = 16; //16px hoz
 	final int maxScreenRow = 12; //12 vert
-	final int screenWidth = tileSize * maxScreenCol; //768     scaling shit
-	final int screenHeight = tileSize * maxScreenRow; //576
-	
+	public final int screenWidth = tileSize * maxScreenCol; //768     scaling shit
+	public final int screenHeight = tileSize * maxScreenRow; //576
+	//Player P;
 	//fps
 	int TPS=60;
 	
@@ -28,9 +28,9 @@ public class GamePanel extends JPanel implements Runnable
 	Player player = new Player(this,keyH);
 	
 	//set player's def pos
-	int playerX = 100;
-	int playerY = 100;
-	int playerSpeed = 4; //player speed is 4
+//	int playerX = 50;
+//	int playerY = 100;
+//	int playerSpeed = 4; //player speed is 4
 	
 	
 	public GamePanel()
@@ -51,7 +51,7 @@ public class GamePanel extends JPanel implements Runnable
 	{
 		double drawInterval = 1000000000/TPS; //
 		double nextDrawTime = System.nanoTime() + drawInterval;
-		int checkTPS = 60;
+		int checkTPS = TPS;
 		
 		while(gameThread != null)
 		{
@@ -60,7 +60,7 @@ public class GamePanel extends JPanel implements Runnable
 			repaint();
 			if(checkTPS>=TPS) 
 			{
-				System.out.printf("PlayerX: %d PlayerY: %d TPS: %d%n", playerX, playerY, checkTPS);
+				System.out.printf("PlayerX: %d PlayerY: %d TPS: %d%n", player.x, player.y, checkTPS);
 				checkTPS = 0;
 			}
 			else {
@@ -87,31 +87,15 @@ public class GamePanel extends JPanel implements Runnable
 	}
 	public void update() 
 	{
-		if(keyH.upPressed == true && playerY>0)
-		{
-			playerY -= playerSpeed;
-		}
-		else if(keyH.downPressed == true && playerY<screenHeight-tileSize)
-		{
-			playerY += playerSpeed;
-		}
-		else if(keyH.leftPressed == true && playerX>0)
-		{
-			playerX -= playerSpeed;
-		}
-		else if(keyH.rightPressed == true && playerX<screenWidth-tileSize)
-		{
-			playerX += playerSpeed;
-		}
+		player.update();
 	}
-	public void paintComponent(Graphics g)
+	public void paintComponent(Graphics b)
 	{
-		super.paintComponent(g);
-		Graphics2D b2 = (Graphics2D)g;
+		super.paintComponent(b);
+		Graphics2D b2 = (Graphics2D)b;
 		
-		b2.setColor(Color.white);
-		
-		b2.fillRect(playerX, playerY, tileSize, tileSize);
+		player.draw(b2);
 		b2.dispose();
+		
 	}
 }
